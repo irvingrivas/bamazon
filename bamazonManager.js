@@ -91,21 +91,23 @@ function addInventory() {
                 message: "How many would you like to add?"
             }])
             .then(function (answer) {
-                for (var i = 0; i < res.length; i++) {
-                    if (parseInt(answer.item) === parseInt(res[i].item_id)) {
-                        var new_amount = parseInt(res[i].stock_quantity) + parseInt(answer.amount);
+                var item_id = parseInt(answer.item);
+                connection.query("SELECT * FROM products WHERE ?",
+                    {
+                        item_id: item_id
+                    }, function (err, res) {
+                        var new_amount = parseInt(res[0].stock_quantity) + parseInt(answer.amount);
                         connection.query("UPDATE products SET ? WHERE ?",
                             [{
                                 stock_quantity: new_amount
                             }, {
-                                item_id: answer.item
-                            }], function (err,res) {
+                                item_id: item_id
+                            }], function (err, res) {
                                 if (err) throw err;
                                 console.log("Added Inventory!");
                                 viewProducts();
                             })
-                    }
-                }
+                    })
             })
     })
 }
@@ -145,4 +147,5 @@ function addNewProduct() {
                     viewProducts();
                 }
             );
-        })}
+        })
+}
