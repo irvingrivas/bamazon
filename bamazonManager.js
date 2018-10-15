@@ -136,7 +136,8 @@ function addNewProduct() {
                 {
                     product_name: answer.item,
                     price: parseInt(answer.price),
-                    stock_quantity: parseInt(answer.amount)
+                    stock_quantity: parseInt(answer.amount),
+                    department_name: dep
                 },
                 function (err, res) {
                     if (err) throw err;
