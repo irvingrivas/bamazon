@@ -37,7 +37,7 @@ function askToBuy() {
         .prompt({
             name: "query_id",
             type: "input",
-            message: "Which item, by id [1-10], would you like to choose?"
+            message: "Which item, by id [1-" + res.length + "], would you like to choose?"
         })
         .then(function (answer) {
             let id = parseInt(answer.query_id);
