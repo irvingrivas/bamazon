@@ -3,6 +3,19 @@
 
 ## Steps To Runs
 
+This is a node and MySQL store app.
+
+This is to be ran on a terminal that has node and npm.
+
+The setup instructions are the following:
+
+```
+git clone "https://github.com/irvingrivas/bamazon"
+cd bamazon
+npm install
+node ${files_below}
+```
+
 ### bamazonCustomer.js
 
 1. Create a MySQL Database called `bamazon`. You can do this by running schema "bamazon.sql" file in this area in MySQL workbench and importing the csv "products.csv" file in this area.
