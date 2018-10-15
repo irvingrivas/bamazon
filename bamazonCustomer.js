@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
     // Your username
     user: "root",
     // Your password
-    password: "password", // super secure! (sarcasm)
+    password: "",
     database: "bamazon_DB"
 });
 
@@ -28,11 +28,11 @@ function start() {
                     res[i].stock_quantity);
             }
             // Log all results of the SELECT statement
-            askToBuy();
+            askToBuy(res);
         });
 }
 
-function askToBuy() {
+function askToBuy(res) {
     inquirer
         .prompt({
             name: "query_id",
@@ -41,11 +41,11 @@ function askToBuy() {
         })
         .then(function (answer) {
             let id = parseInt(answer.query_id);
-            if (id > 0 && id < 11) {
+            if (id > 0 && id <= res.length) {
                 askHowMany(id);
             } else {
                 console.log("Please enter a valid item id!");
-                askToBuy();
+                askToBuy(res);
             }
         })
 }
@@ -60,6 +60,7 @@ function askHowMany(id) {
     .then(function (answer) {
         var query_amount = parseInt(answer.amount);
         var stock_amount = 0;
+        var total_cost = 0;
         console.log("Processing request ...");
         connection.query("SELECT * FROM products WHERE ?",
         {
@@ -67,6 +68,7 @@ function askHowMany(id) {
         }, function(err,res) {
             if (err) throw err;
             stock_amount = res[0].stock_quantity;
+            total_cost = query_amount * res[0].price;
             var new_amount = stock_amount - query_amount;
             if (new_amount >= 0) {
                 connection.query("UPDATE products SET ? WHERE ? ",
@@ -75,6 +77,8 @@ function askHowMany(id) {
                 },{
                     item_id: id
                 }]);
+                console.log("The total amount you spent was " + 
+                    total_cost + ".");
             } else if (new_amount < 0) {
                 connection.query("SELECT * FROM products WHERE ?",
                 {
